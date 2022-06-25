@@ -279,21 +279,25 @@ def feature_importance_plot(model, X_data, output_pth):
     # Sort feature importances in descending order
     indices = np.argsort(importances)[::-1]
 
-# Rearrange feature names so they match the sorted feature importances
-names = [X.columns[i] for i in indices]
+    # Rearrange feature names so they match the sorted feature importances
+    names = [X_data.columns[i] for i in indices]
 
-# Create plot
-plt.figure(figsize=(20,5))
+    # Create plot
+    plt.figure(figsize=(20,5))
 
-# Create plot title
-plt.title("Feature Importance")
-plt.ylabel('Importance')
+    # Create plot title
+    plt.title("Feature Importance")
+    plt.ylabel('Importance')
 
-# Add bars
-plt.bar(range(X.shape[1]), importances[indices])
+    # Add bars
+    plt.bar(range(X_data.shape[1]), importances[indices])
 
-# Add feature names as x-axis labels
-plt.xticks(range(X.shape[1]), names, rotation=90)
+    # Add feature names as x-axis labels
+    plt.xticks(range(X_data.shape[1]), names, rotation=90)
+
+    # Save the figure
+    plt.savefig(output_pth)
+    plt.close()
 
 def train_models(X_train, X_test, y_train, y_test):
     '''
