@@ -6,14 +6,14 @@ Date: June 25 2022
 
 # import libraries
 import os
+import logging
 import pandas as pd
 import numpy as np
 import joblib
-import logging
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn.preprocessing import normalize
 from sklearn.model_selection import train_test_split
 
 from sklearn.linear_model import LogisticRegression
@@ -44,19 +44,19 @@ def import_data(pth):
             df: pandas dataframe
     '''
     try:
-        logging.Info("Reading csv {}".format(pth))
+        logging.info("Reading csv {}".format(pth))
         assert isinstance(pth, str)
-        logging.Info("Path is correct")
+        logging.info("Path is correct")
 
         df = pd.read_csv(pth)
-        logging.Info("SUCESS: csv read correctly")
+        logging.info("SUCESS: csv read correctly")
         return df
 
     except AssertionError:
-        logging.ERROR("ERROR: path is not string")
+        logging.error("ERROR: path is not string")
 
     except FileNotFoundError:
-        logging.ERROR("ERROR: csv not found in path {}".format(pth))
+        logging.error("ERROR: csv not found in path {}".format(pth))
 
 
 def perform_eda(df):
@@ -70,7 +70,7 @@ def perform_eda(df):
     '''
     try:
         assert isinstance(df, pd.DataFrame)
-        logging.Info("Input dataframe is correct")
+        logging.info("Input dataframe is correct")
 
         # print first five rows of the dataframe
         print("First five rows of data are: ", df.head())
@@ -86,7 +86,7 @@ def perform_eda(df):
         df['Churn'] = df['Attrition_Flag'].apply(
             lambda val: 0 if val == "Existing Customer" else 1)
 
-        image_dir = os.path.join(os.cwd, "images")
+        image_dir = os.path.join(os.getcwd(), "images")
         # Plot the histogram of Customer Churn
         plt.figure(figsize=(20, 10))
         df['Churn'].hist()
@@ -123,7 +123,7 @@ def perform_eda(df):
         plt.close()
 
     except BaseException:
-        logging.ERROR("ERROR: Dataframe not found")
+        logging.error("ERROR: Dataframe not found")
 
 
 def encoder_helper(df, category_lst, response):
@@ -134,7 +134,8 @@ def encoder_helper(df, category_lst, response):
     input:
             df: pandas dataframe
             category_lst: list of columns that contain categorical features
-            response: string of response name [optional argument that could be used for naming variables or index y column]
+            response: string of response name
+                      [optional argument that could be used for naming variables or index y column]
 
     output:
             df: pandas dataframe with new columns for
@@ -156,7 +157,8 @@ def perform_feature_engineering(df, response):
     '''
     input:
               df: pandas dataframe
-              response: string of response name [optional argument that could be used for naming variables or index y column]
+              response: string of response name
+                       [optional argument that could be used for naming variables or index y column]
 
     output:
               X_train: X training data
@@ -248,7 +250,7 @@ def classification_report_image(y_train,
              None
     '''
 
-    image_dir = os.path.join(os.cwd, "images")
+    image_dir = os.path.join(os.getcwd(), "images")
 
     # Plot the results of logistic Regression
     plt.figure()
@@ -357,7 +359,7 @@ def train_models(X_train, X_test, y_train, y_test):
     y_test_preds_lr = lrc.predict(X_test)
 
     # save the roc curve with score
-    image_dir = os.path.join(os.cwd(), "images")
+    image_dir = os.path.join(os.getcwd(), "images")
 
     lrc_plot = plot_roc_curve(lrc, X_test, y_test)
 
@@ -373,7 +375,7 @@ def train_models(X_train, X_test, y_train, y_test):
 
     logging.info("Save best model.")
 
-    model_dir = os.path.join(os.cwd(), "model")
+    model_dir = os.path.join(os.getcwd(), "model")
     joblib.dump(
         cv_rfc.best_estimator_,
         os.path.join(
