@@ -225,7 +225,42 @@ def classification_report_image(y_train,
     output:
              None
     '''
-    pass
+
+    image_dir = os.path.join(os.cwd, "images")
+
+    # Plot the results of logistic Regression
+    plt.figure()
+    plt.rc('figure', figsize=(20, 10))
+
+    plt.text(0.01, 1.25, str('Logistic Regression Training Results'))
+
+    plt.text(0.01, 0.05, str(classification_report(y_test, 
+                                                y_test_preds_lr)))
+
+    plt.text(0.01, 0.6, str('Logistic Regression Testing Results'))
+    plt.text(0.01, 0.7, str(classification_report(y_train, 
+                                                y_train_preds_lr)))
+
+    plt.axis('off')
+    plt.savefig(os.path.join(image_dir,'logistic_regression_results.png'))
+    plt.close()   
+
+    # Plot the results of random forest classifier
+    plt.figure()
+    plt.rc('figure', figsize=(20, 10))
+
+    plt.text(0.01, 1.25, str('Random Forest Training Results'))
+
+    plt.text(0.01, 0.05, str(classification_report(y_test, 
+                                                y_test_preds_rf)))
+
+    plt.text(0.01, 0.6, str('Random Forest Testing Results'))
+    plt.text(0.01, 0.7, str(classification_report(y_train, 
+                                                y_train_preds_rf)))
+
+    plt.axis('off')
+    plt.savefig(os.path.join(image_dir,'random_forest_results.png'))
+    plt.close()
 
 
 def feature_importance_plot(model, X_data, output_pth):
