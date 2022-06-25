@@ -1,3 +1,9 @@
+"""
+Performes tests for churn_library module
+Author: Omar Zeb
+Date: 26 June 2022
+"""
+
 import os
 import logging
 import churn_library as cls
@@ -50,11 +56,11 @@ def test_eda(perform_eda):
         try:
             assert images.count("{}.png".format(name))
             logging.info(
-                "SUCESS: {}.png image present in eda folder".format(name))
+                "SUCESS: %(name)s.png image present in eda folder")
 
         except BaseException:
             logging.error(
-                "ERROR: {}.png image not present in eda folder".format(name))
+                "ERROR: %(name)s.png image not present in eda folder")
 
 
 def test_encoder_helper(encoder_helper):
@@ -77,10 +83,10 @@ def test_encoder_helper(encoder_helper):
     for col in cat_columns:
         try:
             assert col in df.columns
-            logging.info("SUCESS: {} is present in the data".format(col))
+            logging.info("SUCESS: %(col)s is present in the data")
 
         except BaseException:
-            logging.error("ERROR: {} not present in the data".format(col))
+            logging.error("ERROR: %(col)s not present in the data")
 
 
 def test_perform_feature_engineering(perform_feature_engineering):
@@ -142,11 +148,11 @@ def test_train_models(train_models):
         try:
             assert images.count("{}.png".format(name))
             logging.info(
-                "SUCESS: {}.png is present in results folder".format(name))
+                "SUCESS: %(name)s.png is present in results folder")
 
         except BaseException:
             logging.error(
-                'ERROR: {}.png is not present in results folder'.format(name))
+                'ERROR: %(name)s.png is not present in results folder')
 
     model_names = ["logistic_model", "rfc_model"]
 
@@ -157,11 +163,11 @@ def test_train_models(train_models):
         try:
             assert models.count("{}.pkl".format(name))
             logging.info(
-                "SUCESS: {}.pkl model is present in model folder".format(name))
+                "SUCESS: %(name)s.pkl model is present in model folder")
 
         except BaseException:
             logging.error(
-                'ERROR: {}.pkl is not present in model folder'.format(name))
+                'ERROR: %(name)s.pkl is not present in model folder')
 
 
 if __name__ == "__main__":
