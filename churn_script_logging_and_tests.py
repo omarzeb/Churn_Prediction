@@ -76,6 +76,38 @@ def test_perform_feature_engineering(perform_feature_engineering):
 	'''
 	test perform_feature_engineering
 	'''
+	X_train, X_test, y_train, y_test = perform_feature_engineering(
+        cls.import_data("./data/BankChurners.csv"), 'Churn')
+
+	try:
+		assert X_train[0].shape > 0
+		assert X_train[1].shape > 0
+		logging.info("SUCESS: X train has the right shape")
+	
+	except:
+		logging.error("ERROR: X train does not have the right shape")
+
+	try:
+		assert X_test[0].shape > 0
+		assert X_test[1].shape > 0
+		logging.info("SUCESS: X test have the right shape")
+	
+	except:
+		logging.error("ERROR: X test does not have the right shape")
+
+	try:
+		assert len(y_train) > 0
+		logging.info("SUCESS: y train contains data")
+	
+	except:
+		logging.error("ERROR: y train does not have any data")
+
+	try:
+		assert len(y_test) > 0
+		logging.info("SUCESS: y test contains data")
+	
+	except:
+		logging.error("ERROR: y test does not have any data")
 
 
 def test_train_models(train_models):
