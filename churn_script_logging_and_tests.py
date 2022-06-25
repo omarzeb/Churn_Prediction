@@ -114,6 +114,36 @@ def test_train_models(train_models):
 	'''
 	test train_models
 	'''
+	X_train, X_test, y_train, y_test = cls.perform_feature_engineering(
+        cls.import_data("./data/BankChurners.csv"), 'Churn')
+
+	train_models(X_train, X_test, y_train, y_test)
+
+	image_names = ["feature_importances", "logistic_regression_results", "random_forest_results", "roc_curve"]
+
+	image_dir = os.path.join(os.getcwd(), "images", "results")
+	images = os.listdir(image_dir)
+	for name in image_names:
+		try:
+			assert images.count("{}.png".format(name))
+			logging.info("SUCESS: {}.png is present in results folder".format(name))
+		
+		except:
+			logging.error('ERROR: {}.png is not present in results folder'.format(name))
+
+	model_names = ["logistic_model", "rfc_model"]
+
+	model_dir = os.path.join(os.getcwd(), "model")
+	models = os.listdir(model_dir)
+	
+	for name in model_names:
+		try:
+			assert models.count("{}.pkl".format(name))
+			logging.info("SUCESS: {}.pkl model is present in model folder".format(name))
+		
+		except:
+			logging.error('ERROR: {}.pkl is not present in model folder'.format(name))
+
 
 
 if __name__ == "__main__":
