@@ -67,6 +67,7 @@ def test_encoder_helper(encoder_helper):
 		try:
 			assert col in df.columns
 			logging.info("SUCESS: {} is present in the data".format(col))
+		
 		except:
 			logging.error("ERROR: {} not present in the data".format(col))
 
