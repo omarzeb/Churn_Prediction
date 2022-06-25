@@ -1,6 +1,6 @@
 import os
 import logging
-import churn_library_solution as cls
+import churn_library as cls
 
 logging.basicConfig(
     filename='./logs/churn_library.log',
@@ -13,7 +13,7 @@ def test_import(import_data):
 	test data import - this example is completed for you to assist with the other test functions
 	'''
 	try:
-		df = import_data("./data/bank_data.csv")
+		df = import_data("./data/BankChurners.csv")
 		logging.info("Testing import_data: SUCCESS")
 	except FileNotFoundError as err:
 		logging.error("Testing import_eda: The file wasn't found")
@@ -31,6 +31,22 @@ def test_eda(perform_eda):
 	'''
 	test perform eda function
 	'''
+
+	perform_eda(cls.import_data("./data/BankChurners.csv"))
+
+	image_dir = os.path.join(os.getcwd(), "images", "eda")
+
+	images = os.listdir(image_dir)
+
+	image_names = ["Age_Hist", "Churn_Hist", "HeatMap", "Marital_Hist", "Trans_CT"]
+	for name in image_names:
+		try:
+			assert images.count("{}.png".format(name))
+			logging.info("{}.png image present in eda folder".format(name))
+		
+		except:
+			logging.error("{}.png image not present in eda folder".format(name))
+
 
 
 def test_encoder_helper(encoder_helper):
