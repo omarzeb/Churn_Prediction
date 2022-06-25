@@ -42,10 +42,10 @@ def test_eda(perform_eda):
 	for name in image_names:
 		try:
 			assert images.count("{}.png".format(name))
-			logging.info("{}.png image present in eda folder".format(name))
+			logging.info("SUCESS: {}.png image present in eda folder".format(name))
 		
 		except:
-			logging.error("{}.png image not present in eda folder".format(name))
+			logging.error("ERROR: {}.png image not present in eda folder".format(name))
 
 
 
@@ -53,6 +53,22 @@ def test_encoder_helper(encoder_helper):
 	'''
 	test encoder helper
 	'''
+	cat_columns = [
+        'Gender',
+        'Education_Level',
+        'Marital_Status',
+        'Income_Category',
+        'Card_Category'
+    ]
+
+	df = encoder_helper(cls.import_data("./data/BankChurners.csv"), cat_columns, 'Churn')
+
+	for col in cat_columns:
+		try:
+			assert col in df.columns
+			logging.info("SUCESS: {} is present in the data".format(col))
+		except:
+			logging.error("ERROR: {} not present in the data".format(col))
 
 
 def test_perform_feature_engineering(perform_feature_engineering):
