@@ -4,15 +4,21 @@ Author: Omar Zeb
 Date: June 25 2022
 """
 
-# library doc string
-
-
 # import libraries
 import os
 import pandas as pd
 import logging
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+from sklearn.preprocessing import normalize
+from sklearn.model_selection import train_test_split
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+
+from sklearn.metrics import plot_roc_curve, classification_report
 
 os.environ['QT_QPA_PLATFORM']='offscreen'
 
@@ -138,8 +144,6 @@ def encoder_helper(df, category_lst, response):
     return df
 
 
-
-
 def perform_feature_engineering(df, response):
     '''
     input:
@@ -152,6 +156,54 @@ def perform_feature_engineering(df, response):
               y_train: y training data
               y_test: y testing data
     '''
+    cat_columns = [
+        'Gender',
+        'Education_Level',
+        'Marital_Status',
+        'Income_Category',
+        'Card_Category'
+    ]
+
+    keep_cols = [
+        'Customer_Age',
+        'Dependent_count',
+        'Months_on_book',
+        'Total_Relationship_Count',
+        'Months_Inactive_12_mon',
+        'Contacts_Count_12_mon',
+        'Credit_Limit',
+        'Total_Revolving_Bal',
+        'Avg_Open_To_Buy',
+        'Total_Amt_Chng_Q4_Q1',
+        'Total_Trans_Amt',
+        'Total_Trans_Ct',
+        'Total_Ct_Chng_Q4_Q1',
+        'Avg_Utilization_Ratio',
+        'Gender_Churn',
+        'Education_Level_Churn',
+        'Marital_Status_Churn',
+        'Income_Category_Churn',
+        'Card_Category_Churn']
+
+    y = df['Churn']
+    X = pd.DataFrame()
+
+    up_df = encoder_helper(df, cat_columns, response)
+
+
+    keep_cols = ['Customer_Age', 'Dependent_count', 'Months_on_book',
+             'Total_Relationship_Count', 'Months_Inactive_12_mon',
+             'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal',
+             'Avg_Open_To_Buy', 'Total_Amt_Chng_Q4_Q1', 'Total_Trans_Amt',
+             'Total_Trans_Ct', 'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio',
+             'Gender_Churn', 'Education_Level_Churn', 'Marital_Status_Churn', 
+             'Income_Category_Churn', 'Card_Category_Churn']
+
+    X[keep_cols] = up_df[keep_cols]
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size= 0.3, random_state=42)
+
+    return X_train, X_test, y_train, y_test
 
 def classification_report_image(y_train,
                                 y_test,
