@@ -1,10 +1,22 @@
+"""
+Module to find customers who are likely to churn
+Author: Omar Zeb
+Date: June 25 2022
+"""
+
 # library doc string
 
 
 # import libraries
 import os
+import pandas as pd
+import logging
 os.environ['QT_QPA_PLATFORM']='offscreen'
 
+logging.basicConfig(filename=os.path.join(os. getcwd(), "logs", "churn_library.log"),
+                        filemode="w",
+                        level = logging.INFO,
+                        format='%(name)s - %(levelname)s - %(message)s')
 
 
 def import_data(pth):
@@ -16,7 +28,22 @@ def import_data(pth):
     output:
             df: pandas dataframe
     '''	
-	pass
+    try:
+        logging.Info("Reading csv {}".format(pth))
+        assert isinstance(pth, str)
+        logging.Info("Path is correct")
+
+        df = pd.read_csv(pth)
+        logging.Info("SUCESS: csv read correctly")
+        return df
+
+    except AssertionError:
+        logging.ERROR("ERROR: path is not string")
+
+    except FileNotFoundError:
+        logging.ERROR("ERROR: csv not found in path {}".format(pth))
+
+
 
 
 def perform_eda(df):
