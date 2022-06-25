@@ -368,3 +368,18 @@ def train_models(X_train, X_test, y_train, y_test):
     # store feature importances plot
     feature_importance_plot(cv_rfc.best_estimator_, X_train,
                             os.path.join(image_dir,'feature_importances.png'))
+
+
+if __name__ == "__main__":
+    logging.info("Loading Data")
+    data = import_data("./data/bank_data.csv")
+
+    logging.info("Perform EDA.")
+    perform_eda(data)
+
+    logging.info("Split data into train & test")
+    X_TRAIN, X_TEST, Y_TRAIN, Y_TEST = perform_feature_engineering(
+        data, 'Churn')
+
+    logging.info("Model training and Result Storing")
+    train_models(X_TRAIN, X_TEST, Y_TRAIN, Y_TEST)
