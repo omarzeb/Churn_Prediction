@@ -11,6 +11,9 @@ Date: June 25 2022
 import os
 import pandas as pd
 import logging
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 os.environ['QT_QPA_PLATFORM']='offscreen'
 
 logging.basicConfig(filename=os.path.join(os. getcwd(), "logs", "churn_library.log"),
@@ -44,8 +47,6 @@ def import_data(pth):
         logging.ERROR("ERROR: csv not found in path {}".format(pth))
 
 
-
-
 def perform_eda(df):
     '''
     perform eda on df and save figures to images folder
@@ -55,7 +56,60 @@ def perform_eda(df):
     output:
             None
     '''
-	pass
+    try:
+        assert isinstance(df, pd.DataFrame)
+        logging.Info("Input dataframe is correct")
+
+        #print first five rows of the dataframe
+        print("First five rows of data are: ",df.head())
+
+        print("The shape of the data is:", df.shape())
+
+        print("Total number of null entries per column in the data are:", df.isnull().sum())
+
+        print("Data Summary is:", df.describe())
+
+        df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1)
+
+        image_dir = os.path.join(os.cwd, "images")
+        # Plot the histogram of Customer Churn
+        plt.figure(figsize=(20,10)) 
+        df['Churn'].hist()
+        plt.title("Distribution of Churn")
+        plt.savefig(os.path.join(image_dir, "Churn_Hist.png"))
+        plt.close()
+
+        # Plot the histogram of Customer Age
+        plt.figure(figsize=(20,10)) 
+        df['Customer_Age'].hist()
+        plt.title("Age Distribution of Customers")
+        plt.savefig(os.path.join(image_dir, "Age_Hist.png"))
+        plt.close()
+
+        # Plot the histogram of Customer Marital Status
+        plt.figure(figsize=(20,10)) 
+        df.Marital_Status.value_counts('normalize').plot(kind='bar')
+        plt.title("Matital Distribution of Customers")
+        plt.savefig(os.path.join(image_dir, "Marital_Hist.png"))
+        plt.close()
+
+        # Plot The transaction distribtion
+        plt.figure(figsize=(20,10)) 
+        sns.histplot(df['Total_Trans_Ct'], stat='density', kde=True)
+        plt.title(" Total Trans Ct distribution")
+        plt.savefig(os.path.join(image_dir, "Trans_CT.png"))
+        plt.close()
+
+        # Plot the HeatMap of the data
+        plt.figure(figsize=(20, 10))
+        sns.heatmap(df.corr(), annot=False, cmap='Dark2_r', linewidths=2)
+        plt.title("Heatmap")
+        plt.savefig(os.path.join(image_dir, "HeatMap.png"))
+        plt.close()
+
+
+    except:
+        logging.ERROR("ERROR: Dataframe not found")
 
 
 def encoder_helper(df, category_lst, response):
@@ -71,7 +125,19 @@ def encoder_helper(df, category_lst, response):
     output:
             df: pandas dataframe with new columns for
     '''
-    pass
+    
+    for category in category_lst:
+        out_list = []
+        groups = df.groupby(category).mean()[response]
+
+        for val in df['Gender']:
+            out_list.append(groups.loc[val])
+        
+        df["{}_{}".format(category,response)] = out_list
+
+    return df
+
+
 
 
 def perform_feature_engineering(df, response):
