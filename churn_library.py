@@ -68,62 +68,56 @@ def perform_eda(df):
     output:
             None
     '''
-    try:
-        assert isinstance(df, pd.DataFrame)
-        logging.info("Input dataframe is correct")
 
-        # print first five rows of the dataframe
-        print("First five rows of data are: ", df.head())
+    # print first five rows of the dataframe
+    print("First five rows of data are: ", df.head())
 
-        print("The shape of the data is:", df.shape())
+    print("The shape of the data is:", df.shape)
 
-        print(
-            "Total number of null entries per column in the data are:",
-            df.isnull().sum())
+    print(
+        "Total number of null entries per column in the data are:",
+        df.isnull().sum())
 
-        print("Data Summary is:", df.describe())
+    print("Data Summary is:", df.describe())
 
-        df['Churn'] = df['Attrition_Flag'].apply(
-            lambda val: 0 if val == "Existing Customer" else 1)
+    df['Churn'] = df['Attrition_Flag'].apply(
+        lambda val: 0 if val == "Existing Customer" else 1)
 
-        image_dir = os.path.join(os.getcwd(), "images")
-        # Plot the histogram of Customer Churn
-        plt.figure(figsize=(20, 10))
-        df['Churn'].hist()
-        plt.title("Distribution of Churn")
-        plt.savefig(os.path.join(image_dir, "Churn_Hist.png"))
-        plt.close()
+    image_dir = os.path.join(os.getcwd(), "images")
+    # Plot the histogram of Customer Churn
+    plt.figure(figsize=(20, 10))
+    df['Churn'].hist()
+    plt.title("Distribution of Churn")
+    plt.savefig(os.path.join(image_dir, "Churn_Hist.png"))
+    plt.close()
 
-        # Plot the histogram of Customer Age
-        plt.figure(figsize=(20, 10))
-        df['Customer_Age'].hist()
-        plt.title("Age Distribution of Customers")
-        plt.savefig(os.path.join(image_dir, "Age_Hist.png"))
-        plt.close()
+    # Plot the histogram of Customer Age
+    plt.figure(figsize=(20, 10))
+    df['Customer_Age'].hist()
+    plt.title("Age Distribution of Customers")
+    plt.savefig(os.path.join(image_dir, "Age_Hist.png"))
+    plt.close()
 
-        # Plot the histogram of Customer Marital Status
-        plt.figure(figsize=(20, 10))
-        df.Marital_Status.value_counts('normalize').plot(kind='bar')
-        plt.title("Matital Distribution of Customers")
-        plt.savefig(os.path.join(image_dir, "Marital_Hist.png"))
-        plt.close()
+    # Plot the histogram of Customer Marital Status
+    plt.figure(figsize=(20, 10))
+    df.Marital_Status.value_counts('normalize').plot(kind='bar')
+    plt.title("Matital Distribution of Customers")
+    plt.savefig(os.path.join(image_dir, "Marital_Hist.png"))
+    plt.close()
 
-        # Plot The transaction distribtion
-        plt.figure(figsize=(20, 10))
-        sns.histplot(df['Total_Trans_Ct'], stat='density', kde=True)
-        plt.title(" Total Trans Ct distribution")
-        plt.savefig(os.path.join(image_dir, "Trans_CT.png"))
-        plt.close()
+    # Plot The transaction distribtion
+    plt.figure(figsize=(20, 10))
+    sns.histplot(df['Total_Trans_Ct'], stat='density', kde=True)
+    plt.title(" Total Trans Ct distribution")
+    plt.savefig(os.path.join(image_dir, "Trans_CT.png"))
+    plt.close()
 
-        # Plot the HeatMap of the data
-        plt.figure(figsize=(20, 10))
-        sns.heatmap(df.corr(), annot=False, cmap='Dark2_r', linewidths=2)
-        plt.title("Heatmap")
-        plt.savefig(os.path.join(image_dir, "HeatMap.png"))
-        plt.close()
-
-    except BaseException:
-        logging.error("ERROR: Dataframe not found")
+    # Plot the HeatMap of the data
+    plt.figure(figsize=(20, 10))
+    sns.heatmap(df.corr(), annot=False, cmap='Dark2_r', linewidths=2)
+    plt.title("Heatmap")
+    plt.savefig(os.path.join(image_dir, "HeatMap.png"))
+    plt.close()
 
 
 def encoder_helper(df, category_lst, response):
@@ -145,7 +139,7 @@ def encoder_helper(df, category_lst, response):
         out_list = []
         groups = df.groupby(category).mean()[response]
 
-        for val in df['Gender']:
+        for val in df[category]:
             out_list.append(groups.loc[val])
 
         df["{}_{}".format(category, response)] = out_list
@@ -399,7 +393,7 @@ def train_models(X_train, X_test, y_train, y_test):
 
 if __name__ == "__main__":
     logging.info("Loading Data")
-    data = import_data("./data/bank_data.csv")
+    data = import_data("./data/BankChurners.csv")
 
     logging.info("Perform EDA.")
     perform_eda(data)
