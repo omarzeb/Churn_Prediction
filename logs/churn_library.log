@@ -1,0 +1,8 @@
+root - INFO - Loading Data
+root - INFO - Reading csv ./data/BankChurners.csv
+root - INFO - Path is correct
+root - INFO - SUCESS: csv read correctly
+root - INFO - Perform EDA.
+root - INFO - Split data into train & test
+root - INFO - Model training and Result Storing
+root - INFO - Save best model.
