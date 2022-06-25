@@ -8,6 +8,7 @@ Date: June 25 2022
 import os
 import pandas as pd
 import numpy as np
+import joblib
 import logging
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -310,4 +311,60 @@ def train_models(X_train, X_test, y_train, y_test):
     output:
               None
     '''
-    pass
+    # grid search
+    rfc = RandomForestClassifier(random_state=42)
+    lrc = LogisticRegression(solver='lbfgs', max_iter=3000)
+
+    param_grid = { 
+    'n_estimators': [200, 500],
+    'max_features': ['auto', 'sqrt'],
+    'max_depth' : [4,5,100],
+    'criterion' :['gini', 'entropy']
+     }
+
+    # Random Forest
+    cv_rfc = GridSearchCV(estimator=rfc, param_grid=param_grid, cv=5)
+    cv_rfc.fit(X_train, y_train)
+
+    # LogisticRegression
+    lrc.fit(X_train, y_train)
+
+    y_train_preds_rf = cv_rfc.best_estimator_.predict(X_train)
+    y_test_preds_rf = cv_rfc.best_estimator_.predict(X_test)
+
+    y_train_preds_lr = lrc.predict(X_train)
+    y_test_preds_lr = lrc.predict(X_test)
+
+    # save the roc curve with score
+    image_dir = os.path.join(os.cwd(), "images")
+    
+    lrc_plot = plot_roc_curve(lrc, X_test, y_test)
+    
+    plt.figure(figsize=(15, 8))
+    axis = plt.gca()
+    
+    _ = plot_roc_curve(cv_rfc.best_estimator_,
+                       X_test, y_test, ax=axis, alpha=0.8)
+    
+    lrc_plot.plot(ax=axis, alpha=0.8)
+    plt.savefig(os.path.join(image_dir, 'roc_curve.png'))
+    plt.close()
+
+    logging.info("Save best model.")
+
+    model_dir = os.path.join(os.cwd(), "model")
+    joblib.dump(cv_rfc.best_estimator_, os.path.join(model_dir,'rfc_model.pkl'))
+    joblib.dump(lrc, os.path.join(model_dir,'logistic_model.pkl'))
+
+    # store model results
+    classification_report_image(
+        y_train,
+        y_test,
+        y_train_preds_lr,
+        y_train_preds_rf,
+        y_test_preds_lr,
+        y_test_preds_rf)
+
+    # store feature importances plot
+    feature_importance_plot(cv_rfc.best_estimator_, X_train,
+                            os.path.join(image_dir,'feature_importances.png'))
