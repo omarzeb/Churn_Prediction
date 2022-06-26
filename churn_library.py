@@ -88,35 +88,35 @@ def perform_eda(df):
     plt.figure(figsize=(20, 10))
     df['Churn'].hist()
     plt.title("Distribution of Churn")
-    plt.savefig(os.path.join(image_dir, "Churn_Hist.png"))
+    plt.savefig(os.path.join(image_dir, "churn_distribution.png"))
     plt.close()
 
     # Plot the histogram of Customer Age
     plt.figure(figsize=(20, 10))
     df['Customer_Age'].hist()
     plt.title("Age Distribution of Customers")
-    plt.savefig(os.path.join(image_dir, "Age_Hist.png"))
+    plt.savefig(os.path.join(image_dir, "customer_age_distribution.png"))
     plt.close()
 
     # Plot the histogram of Customer Marital Status
     plt.figure(figsize=(20, 10))
     df.Marital_Status.value_counts('normalize').plot(kind='bar')
     plt.title("Matital Distribution of Customers")
-    plt.savefig(os.path.join(image_dir, "Marital_Hist.png"))
+    plt.savefig(os.path.join(image_dir, "marital_status_distribution.png"))
     plt.close()
 
     # Plot The transaction distribtion
     plt.figure(figsize=(20, 10))
     sns.histplot(df['Total_Trans_Ct'], stat='density', kde=True)
     plt.title(" Total Trans Ct distribution")
-    plt.savefig(os.path.join(image_dir, "Trans_CT.png"))
+    plt.savefig(os.path.join(image_dir, "total_trans_Ct.png"))
     plt.close()
 
     # Plot the HeatMap of the data
     plt.figure(figsize=(20, 10))
     sns.heatmap(df.corr(), annot=False, cmap='Dark2_r', linewidths=2)
     plt.title("Heatmap")
-    plt.savefig(os.path.join(image_dir, "HeatMap.png"))
+    plt.savefig(os.path.join(image_dir, "heatmap.png"))
     plt.close()
 
 
@@ -190,7 +190,7 @@ def perform_feature_engineering(df, response):
         'Card_Category_Churn']
 
     y = df['Churn']
-    
+
     X = pd.DataFrame()
 
     up_df = encoder_helper(df, cat_columns, response)
@@ -261,7 +261,7 @@ def classification_report_image(y_train,
                                                   y_train_preds_lr)))
 
     plt.axis('off')
-    plt.savefig(os.path.join(image_dir, 'logistic_regression_results.png'))
+    plt.savefig(os.path.join(image_dir, 'logistic_results.png'))
     plt.close()
 
     # Plot the results of random forest classifier
@@ -278,7 +278,7 @@ def classification_report_image(y_train,
                                                   y_train_preds_rf)))
 
     plt.axis('off')
-    plt.savefig(os.path.join(image_dir, 'random_forest_results.png'))
+    plt.savefig(os.path.join(image_dir, 'rf_results.png'))
     plt.close()
 
 
@@ -365,7 +365,7 @@ def train_models(X_train, X_test, y_train, y_test):
                        X_test, y_test, ax=axis, alpha=0.8)
 
     lrc_plot.plot(ax=axis, alpha=0.8)
-    plt.savefig(os.path.join(image_dir, 'roc_curve.png'))
+    plt.savefig(os.path.join(image_dir, 'roc_curve_result.png'))
     plt.close()
 
     logging.info("Save best model.")
@@ -394,7 +394,7 @@ def train_models(X_train, X_test, y_train, y_test):
 
 if __name__ == "__main__":
     logging.info("Loading Data")
-    data = import_data("./data/BankChurners.csv")
+    data = import_data("./data/bank_data.csv")
 
     logging.info("Perform EDA.")
     perform_eda(data)

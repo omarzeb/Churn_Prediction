@@ -20,7 +20,7 @@ def test_import(import_data):
     test data import - this example is completed for you to assist with the other test functions
     '''
     try:
-        df = import_data("./data/BankChurners.csv")
+        df = import_data("./data/bank_data.csv")
         logging.info("Testing import_data: SUCCESS")
     except FileNotFoundError as err:
         logging.error("Testing import_eda: The file wasn't found")
@@ -48,20 +48,22 @@ def test_eda(perform_eda, df):
     images = os.listdir(image_dir)
 
     image_names = [
-        "Age_Hist",
-        "Churn_Hist",
-        "HeatMap",
-        "Marital_Hist",
-        "Trans_CT"]
+        "churn_distribution",
+        "customer_age_distribution",
+        "marital_status_distribution",
+        "total_trans_Ct",
+        "heatmap"]
     for img_name in image_names:
         try:
             assert images.count("{}.png".format(img_name))
             logging.info(
                 "SUCESS: %s.png image present in eda folder", img_name)
 
-        except BaseException:
+        except AssertionError as err:
             logging.error(
                 "ERROR: %s.png image not present in eda folder", img_name)
+
+            raise err
 
 
 def test_encoder_helper(encoder_helper, data):
@@ -86,8 +88,9 @@ def test_encoder_helper(encoder_helper, data):
             assert col in df.columns
             logging.info("SUCESS: %s is present in the data", col)
 
-        except BaseException:
+        except AssertionError as err:
             logging.error("ERROR: %s not present in the data", col)
+            raise err
 
     return df
 
@@ -105,30 +108,34 @@ def test_perform_feature_engineering(perform_feature_engineering, df):
         assert x_train.shape[1] > 0
         logging.info("SUCESS: X train has the right shape")
 
-    except BaseException:
+    except AssertionError as err:
         logging.error("ERROR: X train does not have the right shape")
+        raise err
 
     try:
         assert x_test.shape[0] > 0
         assert x_test.shape[1] > 0
         logging.info("SUCESS: X test have the right shape")
 
-    except BaseException:
+    except AssertionError as err:
         logging.error("ERROR: X test does not have the right shape")
+        raise err
 
     try:
         assert len(y_train) > 0
         logging.info("SUCESS: y train contains data")
 
-    except BaseException:
+    except AssertionError as err:
         logging.error("ERROR: y train does not have any data")
+        raise err
 
     try:
         assert len(y_test) > 0
         logging.info("SUCESS: y test contains data")
 
-    except BaseException:
+    except AssertionError as err:
         logging.error("ERROR: y test does not have any data")
+        raise err
 
     return x_train, x_test, y_train, y_test
 
@@ -141,8 +148,8 @@ def test_train_models(train_models, x_train, x_test, y_train, y_test):
 
     image_names = [
         "feature_importances",
-        "logistic_regression_results",
-        "random_forest_results",
+        "logistic_results",
+        "rf_results",
         "roc_curve"]
 
     image_dir = os.path.join(os.getcwd(), "images", "results")
@@ -153,9 +160,10 @@ def test_train_models(train_models, x_train, x_test, y_train, y_test):
             logging.info(
                 "SUCESS: %s.png is present in results folder", name)
 
-        except BaseException:
+        except AssertionError as err:
             logging.error(
                 'ERROR: %s.png is not present in results folder', name)
+            raise err
 
     model_names = ["logistic_model", "rfc_model"]
 
@@ -168,9 +176,10 @@ def test_train_models(train_models, x_train, x_test, y_train, y_test):
             logging.info(
                 "SUCESS: %s.pkl model is present in model folder", name)
 
-        except BaseException:
+        except AssertionError as err:
             logging.error(
                 'ERROR: %s.pkl is not present in model folder', name)
+            raise err
 
 
 if __name__ == "__main__":

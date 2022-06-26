@@ -1,12 +1,12 @@
-root - INFO - Reading csv ./data/BankChurners.csv
+root - INFO - Reading csv ./data/bank_data.csv
 root - INFO - Path is correct
 root - INFO - SUCESS: csv read correctly
 root - INFO - Testing import_data: SUCCESS
-root - INFO - SUCESS: Age_Hist.png image present in eda folder
-root - INFO - SUCESS: Churn_Hist.png image present in eda folder
-root - INFO - SUCESS: HeatMap.png image present in eda folder
-root - INFO - SUCESS: Marital_Hist.png image present in eda folder
-root - INFO - SUCESS: Trans_CT.png image present in eda folder
+root - INFO - SUCESS: churn_distribution.png image present in eda folder
+root - INFO - SUCESS: customer_age_distribution.png image present in eda folder
+root - INFO - SUCESS: marital_status_distribution.png image present in eda folder
+root - INFO - SUCESS: total_trans_Ct.png image present in eda folder
+root - INFO - SUCESS: heatmap.png image present in eda folder
 root - INFO - SUCESS: Gender is present in the data
 root - INFO - SUCESS: Education_Level is present in the data
 root - INFO - SUCESS: Marital_Status is present in the data
@@ -18,8 +18,8 @@ root - INFO - SUCESS: y train contains data
 root - INFO - SUCESS: y test contains data
 root - INFO - Save best model.
 root - INFO - SUCESS: feature_importances.png is present in results folder
-root - INFO - SUCESS: logistic_regression_results.png is present in results folder
-root - INFO - SUCESS: random_forest_results.png is present in results folder
-root - INFO - SUCESS: roc_curve.png is present in results folder
+root - INFO - SUCESS: logistic_results.png is present in results folder
+root - INFO - SUCESS: rf_results.png is present in results folder
+root - ERROR - ERROR: roc_curve.png is not present in results folder
 root - INFO - SUCESS: logistic_model.pkl model is present in model folder
 root - INFO - SUCESS: rfc_model.pkl model is present in model folder
