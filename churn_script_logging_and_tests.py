@@ -34,13 +34,14 @@ def test_import(import_data):
             "Testing import_data: The file doesn't appear to have rows and columns")
         raise err
 
+    return df
 
-def test_eda(perform_eda):
+
+def test_eda(perform_eda, df):
     '''
     test perform eda function
     '''
-
-    perform_eda(cls.import_data("./data/BankChurners.csv"))
+    perform_eda(df)
 
     image_dir = os.path.join(os.getcwd(), "images", "eda")
 
@@ -52,18 +53,18 @@ def test_eda(perform_eda):
         "HeatMap",
         "Marital_Hist",
         "Trans_CT"]
-    for name in image_names:
+    for img_name in image_names:
         try:
-            assert images.count("{}.png".format(name))
+            assert images.count("{}.png".format(img_name))
             logging.info(
-                "SUCESS: %(name)s.png image present in eda folder")
+                "SUCESS: %s.png image present in eda folder", img_name)
 
         except BaseException:
             logging.error(
-                "ERROR: %(name)s.png image not present in eda folder")
+                "ERROR: %s.png image not present in eda folder", img_name)
 
 
-def test_encoder_helper(encoder_helper):
+def test_encoder_helper(encoder_helper, data):
     '''
     test encoder helper
     '''
@@ -76,37 +77,40 @@ def test_encoder_helper(encoder_helper):
     ]
 
     df = encoder_helper(
-        cls.import_data("./data/BankChurners.csv"),
+        data,
         cat_columns,
         'Churn')
 
     for col in cat_columns:
         try:
             assert col in df.columns
-            logging.info("SUCESS: %(col)s is present in the data")
+            logging.info("SUCESS: %s is present in the data", col)
 
         except BaseException:
-            logging.error("ERROR: %(col)s not present in the data")
+            logging.error("ERROR: %s not present in the data", col)
+
+    return df
 
 
-def test_perform_feature_engineering(perform_feature_engineering):
+def test_perform_feature_engineering(perform_feature_engineering, df):
     '''
     test perform_feature_engineering
     '''
-    X_train, X_test, y_train, y_test = perform_feature_engineering(
-        cls.import_data("./data/BankChurners.csv"), 'Churn')
+
+    x_train, x_test, y_train, y_test = perform_feature_engineering(
+        df, 'Churn')
 
     try:
-        assert X_train[0].shape > 0
-        assert X_train[1].shape > 0
+        assert x_train.shape[0] > 0
+        assert x_train.shape[1] > 0
         logging.info("SUCESS: X train has the right shape")
 
     except BaseException:
         logging.error("ERROR: X train does not have the right shape")
 
     try:
-        assert X_test[0].shape > 0
-        assert X_test[1].shape > 0
+        assert x_test.shape[0] > 0
+        assert x_test.shape[1] > 0
         logging.info("SUCESS: X test have the right shape")
 
     except BaseException:
@@ -126,15 +130,14 @@ def test_perform_feature_engineering(perform_feature_engineering):
     except BaseException:
         logging.error("ERROR: y test does not have any data")
 
+    return x_train, x_test, y_train, y_test
 
-def test_train_models(train_models):
+
+def test_train_models(train_models, x_train, x_test, y_train, y_test):
     '''
     test train_models
     '''
-    X_train, X_test, y_train, y_test = cls.perform_feature_engineering(
-        cls.import_data("./data/BankChurners.csv"), 'Churn')
-
-    train_models(X_train, X_test, y_train, y_test)
+    train_models(x_train, x_test, y_train, y_test)
 
     image_names = [
         "feature_importances",
@@ -148,11 +151,11 @@ def test_train_models(train_models):
         try:
             assert images.count("{}.png".format(name))
             logging.info(
-                "SUCESS: %(name)s.png is present in results folder")
+                "SUCESS: %s.png is present in results folder", name)
 
         except BaseException:
             logging.error(
-                'ERROR: %(name)s.png is not present in results folder')
+                'ERROR: %s.png is not present in results folder', name)
 
     model_names = ["logistic_model", "rfc_model"]
 
@@ -163,20 +166,21 @@ def test_train_models(train_models):
         try:
             assert models.count("{}.pkl".format(name))
             logging.info(
-                "SUCESS: %(name)s.pkl model is present in model folder")
+                "SUCESS: %s.pkl model is present in model folder", name)
 
         except BaseException:
             logging.error(
-                'ERROR: %(name)s.pkl is not present in model folder')
+                'ERROR: %s.pkl is not present in model folder', name)
 
 
 if __name__ == "__main__":
-    test_import(cls.import_data)
+    data_df = test_import(cls.import_data)
 
-    test_eda(cls.perform_eda)
+    test_eda(cls.perform_eda, data_df)
 
-    test_encoder_helper(cls.encoder_helper)
+    data_df = test_encoder_helper(cls.encoder_helper, data_df)
 
-    test_perform_feature_engineering(cls.perform_feature_engineering)
+    X_TRAIN, X_TEST, Y_TRAIN, Y_TEST = test_perform_feature_engineering(
+        cls.perform_feature_engineering, data_df)
 
-    test_train_models(cls.train_models)
+    test_train_models(cls.train_models, X_TRAIN, X_TEST, Y_TRAIN, Y_TEST)
