@@ -83,7 +83,7 @@ def perform_eda(df):
     df['Churn'] = df['Attrition_Flag'].apply(
         lambda val: 0 if val == "Existing Customer" else 1)
 
-    image_dir = os.path.join(os.getcwd(), "images")
+    image_dir = os.path.join(os.getcwd(), "images", "eda")
     # Plot the histogram of Customer Churn
     plt.figure(figsize=(20, 10))
     df['Churn'].hist()
@@ -190,6 +190,7 @@ def perform_feature_engineering(df, response):
         'Card_Category_Churn']
 
     y = df['Churn']
+    
     X = pd.DataFrame()
 
     up_df = encoder_helper(df, cat_columns, response)
@@ -244,7 +245,7 @@ def classification_report_image(y_train,
              None
     '''
 
-    image_dir = os.path.join(os.getcwd(), "images")
+    image_dir = os.path.join(os.getcwd(), "images", "results")
 
     # Plot the results of logistic Regression
     plt.figure()
@@ -353,7 +354,7 @@ def train_models(X_train, X_test, y_train, y_test):
     y_test_preds_lr = lrc.predict(X_test)
 
     # save the roc curve with score
-    image_dir = os.path.join(os.getcwd(), "images")
+    image_dir = os.path.join(os.getcwd(), "images", "results")
 
     lrc_plot = plot_roc_curve(lrc, X_test, y_test)
 
