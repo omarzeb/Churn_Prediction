@@ -190,6 +190,7 @@ def perform_feature_engineering(df, response):
         'Card_Category_Churn']
 
     y = df['Churn']
+    
     X = pd.DataFrame()
 
     up_df = encoder_helper(df, cat_columns, response)
